@@ -1,0 +1,121 @@
+<div class="min-h-screen bg-gray-50 pb-16 md:pb-0">
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 text-center">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4">
+        Vos restaurants préférés,<br>livrés en un clic 🍕
+      </h1>
+      <p class="text-xl md:text-2xl mb-8 text-white/90">
+        Découvrez les meilleurs restaurants près de chez vous
+      </p>
+      <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-2">
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400 ml-3 text-xl">🔍</span>
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Rechercher un restaurant ou un plat..."
+            class="flex-1 px-3 py-3 text-gray-900 outline-none" />
+          <a [routerLink]="['/restaurants']" [queryParams]="{search: searchQuery}"
+            class="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-red-600 transition-all">
+            Rechercher
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+    <!-- Promotions Banner -->
+    <section class="mb-12" *ngIf="promotions.length > 0">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
+          ✨ Offres Spéciales
+        </h2>
+        <span class="badge-service">🔌 API: Promotion Service</span>
+      </div>
+      <div class="relative overflow-hidden rounded-2xl shadow-xl">
+        <div class="relative h-64 md:h-80" *ngIf="currentPromo">
+          <img [src]="currentPromo.image" [alt]="currentPromo.title"
+            class="w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
+            <h3 class="text-2xl md:text-4xl font-bold mb-2">{{ currentPromo.title }}</h3>
+            <p class="text-lg md:text-xl mb-4">{{ currentPromo.description }}</p>
+            <div *ngIf="currentPromo.code"
+              class="inline-block bg-white text-gray-900 px-4 py-2 rounded-lg font-bold">
+              Code: {{ currentPromo.code }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-center gap-2 mt-4">
+        <button *ngFor="let p of promotions; let i = index" (click)="setPromo(i)"
+          [class]="i === currentPromoIndex ? 'bg-orange-500 w-8 h-2 rounded-full transition-all' : 'bg-gray-300 w-2 h-2 rounded-full transition-all'">
+        </button>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="mb-12" *ngIf="categories.length > 0">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Catégories Populaires</h2>
+        <span class="badge-service">🔌 API: Restaurant Service</span>
+      </div>
+      <div class="grid grid-cols-4 md:grid-cols-8 gap-4">
+        <a *ngFor="let cat of categories" [routerLink]="['/restaurants']" [queryParams]="{category: cat.name}"
+          class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all text-center hover:scale-105 transform duration-200 cursor-pointer">
+          <div class="text-4xl mb-2">{{ cat.icon }}</div>
+          <p class="text-xs md:text-sm font-semibold text-gray-900 mb-1">{{ cat.name }}</p>
+          <p class="text-xs text-gray-500">{{ cat.restaurantCount }}</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Promoted Restaurants -->
+    <section class="mb-12" *ngIf="promotedRestaurants.length > 0">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Restaurants Recommandés</h2>
+        <div class="flex items-center gap-2">
+          <span class="badge-service">🔌 API: Restaurant Service</span>
+          <a routerLink="/restaurants" class="text-orange-600 hover:text-orange-700 font-semibold text-sm">
+            Voir tout →
+          </a>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a *ngFor="let r of promotedRestaurants" [routerLink]="['/restaurant', r.id]"
+          class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow hover:-translate-y-1 transform duration-200 cursor-pointer">
+          <div class="relative h-48 overflow-hidden">
+            <img [src]="r.image" [alt]="r.name" class="w-full h-full object-cover" />
+            <div *ngIf="r.discount"
+              class="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+              🏷️ -{{ r.discount }}%
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-lg mb-1 text-gray-900">{{ r.name }}</h3>
+            <p class="text-gray-500 text-sm mb-3">{{ r.cuisine }}</p>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-yellow-500 font-semibold">★ {{ r.rating }}</span>
+              <span class="text-gray-500">⏱ {{ r.deliveryTime }} min</span>
+              <span class="text-gray-500">{{ r.deliveryFee }}€ livraison</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">
+        Livraison gratuite pour votre première commande ! 🎉
+      </h2>
+      <p class="text-lg md:text-xl mb-6 text-white/90">
+        Inscrivez-vous maintenant et profitez de -20% sur votre première commande
+      </p>
+      <a routerLink="/signup"
+        class="inline-block bg-white text-orange-600 px-8 py-3 rounded-xl font-bold hover:bg-gray-100 transition-all shadow-lg">
+        Créer un compte
+      </a>
+    </section>
+  </div>
+</div>

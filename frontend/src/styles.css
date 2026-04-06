@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-primary {
+  @apply bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold px-6 py-3 rounded-xl hover:from-orange-600 hover:to-red-600 transition-all shadow-md;
+}
+
+.btn-outline {
+  @apply border border-orange-500 text-orange-600 font-semibold px-6 py-3 rounded-xl hover:bg-orange-50 transition-all;
+}
+
+.card {
+  @apply bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow;
+}
+
+.badge-service {
+  @apply text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full font-medium;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease forwards;
+}

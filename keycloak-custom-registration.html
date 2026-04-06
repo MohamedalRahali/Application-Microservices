@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>FoodExpress Registration</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f97316, #dc2626);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .registration-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #f97316, #dc2626);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+        h1 {
+            color: #111827;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-align: center;
+        }
+        .subtitle {
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        input[type="text"], input[type="email"], input[type="password"], select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #f97316;
+        }
+        .role-selection {
+            margin: 24px 0;
+        }
+        .role-option {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .role-option:hover {
+            border-color: #f97316;
+            background-color: #fff7ed;
+        }
+        .role-option.selected {
+            border-color: #f97316;
+            background-color: #fff7ed;
+        }
+        .role-radio {
+            margin-right: 12px;
+        }
+        .role-info h3 {
+            margin: 0 0 4px 0;
+            color: #111827;
+            font-weight: 600;
+        }
+        .role-info p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #f97316, #dc2626);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-1px);
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 24px;
+            color: #6b7280;
+        }
+        .login-link a {
+            color: #f97316;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <div class="logo">
+            <div class="logo-icon">🍽️</div>
+            <h1>Join FoodExpress</h1>
+            <p class="subtitle">Create your account to get started</p>
+        </div>
+
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+
+            <div class="role-selection">
+                <label>I want to:</label>
+                
+                <div class="role-option" onclick="selectRole('customer')">
+                    <input type="radio" name="userRole" value="customer" class="role-radio" id="customer">
+                    <div class="role-info">
+                        <h3>Order Food</h3>
+                        <p>Browse restaurants and place orders for delivery</p>
+                    </div>
+                </div>
+
+                <div class="role-option" onclick="selectRole('restaurant_owner')">
+                    <input type="radio" name="userRole" value="restaurant_owner" class="role-radio" id="restaurant_owner">
+                    <div class="role-info">
+                        <h3>Manage Restaurant</h3>
+                        <p>List your restaurant and manage incoming orders</p>
+                    </div>
+                </div>
+
+                <div class="role-option" onclick="selectRole('delivery_person')">
+                    <input type="radio" name="userRole" value="delivery_person" class="role-radio" id="delivery_person">
+                    <div class="role-info">
+                        <h3>Deliver Orders</h3>
+                        <p>Join our delivery team and earn money</p>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Create Account</button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="/login">Sign in</a>
+        </div>
+    </div>
+
+    <script>
+        function selectRole(role) {
+            // Remove selected class from all options
+            document.querySelectorAll('.role-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            event.currentTarget.classList.add('selected');
+            
+            // Check the radio button
+            document.getElementById(role).checked = true;
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Validate passwords match
+            if (data.password !== data.confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            // Validate role selection
+            if (!data.userRole) {
+                alert('Please select an account type!');
+                return;
+            }
+            
+            // Here you would normally send the data to your backend
+            console.log('Registration data:', data);
+            alert('Registration successful! (This is a demo)');
+        });
+    </script>
+</body>
+</html>

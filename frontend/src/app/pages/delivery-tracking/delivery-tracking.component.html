@@ -1,0 +1,122 @@
+<div class="min-h-screen bg-gray-50 pb-16 md:pb-0">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="flex items-center justify-center h-64">
+      <div class="animate-spin rounded-full h-12 w-12 border-4 border-orange-500 border-t-transparent"></div>
+    </div>
+
+    <ng-container *ngIf="!loading">
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Suivi de livraison</h1>
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-gray-500">Commande #{{ orderId }}</span>
+          <span class="badge-service">🔌 API: Delivery Service</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Map -->
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="relative h-96 md:h-[500px] bg-gradient-to-br from-blue-100 to-green-100">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="text-center p-8">
+                  <div class="text-6xl mb-4">📍</div>
+                  <p class="text-gray-700 font-semibold mb-2">Carte interactive en temps réel</p>
+                  <p class="text-sm text-gray-600">Position du livreur • Trajet optimisé • ETA dynamique</p>
+                </div>
+              </div>
+              <!-- Animated markers -->
+              <div class="absolute top-20 left-1/4 animate-pulse">
+                <div class="bg-blue-500 text-white p-3 rounded-full shadow-lg text-xl">🏪</div>
+              </div>
+              <div class="absolute top-1/2 left-1/3 animate-bounce">
+                <div class="bg-orange-500 text-white p-3 rounded-full shadow-lg text-xl">🛵</div>
+              </div>
+              <div class="absolute bottom-20 right-1/4">
+                <div class="bg-green-500 text-white p-3 rounded-full shadow-lg text-xl">🏠</div>
+              </div>
+            </div>
+            <!-- ETA Banner -->
+            <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-white/80 mb-1">Arrivée estimée</p>
+                  <p class="text-3xl font-bold">{{ estimatedTime }} minutes</p>
+                </div>
+                <span class="text-5xl">⏱️</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="lg:col-span-1 space-y-6" *ngIf="delivery">
+          <!-- Timeline -->
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Statut de la commande</h2>
+            <div class="space-y-4">
+              <div *ngFor="let step of timeline; let i = index; let last = last" class="flex items-start gap-3">
+                <div class="flex flex-col items-center">
+                  <div [class]="step.completed
+                    ? 'w-8 h-8 rounded-full flex items-center justify-center bg-green-500'
+                    : 'w-8 h-8 rounded-full flex items-center justify-center bg-gray-200'">
+                    <span *ngIf="step.completed" class="text-white text-sm">✓</span>
+                    <div *ngIf="!step.completed" class="w-3 h-3 bg-white rounded-full"></div>
+                  </div>
+                  <div *ngIf="!last" [class]="step.completed ? 'w-0.5 h-12 bg-green-500' : 'w-0.5 h-12 bg-gray-200'"></div>
+                </div>
+                <div class="flex-1 pt-1">
+                  <p [class]="step.completed ? 'font-semibold text-gray-900' : 'font-semibold text-gray-400'">
+                    {{ step.label }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Driver Info -->
+          <div class="bg-white rounded-xl shadow-sm p-6" *ngIf="delivery.driverName">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Votre livreur</h2>
+            <div class="flex items-center gap-4 mb-4">
+              <img [src]="delivery.driverAvatar || 'https://via.placeholder.com/64'"
+                [alt]="delivery.driverName" class="w-16 h-16 rounded-full object-cover" />
+              <div class="flex-1">
+                <p class="font-bold text-gray-900">{{ delivery.driverName }}</p>
+                <div class="flex items-center gap-1 text-sm">
+                  <span class="text-yellow-500">★</span>
+                  <span class="font-semibold text-gray-900">{{ delivery.driverRating }}</span>
+                </div>
+                <p class="text-sm text-gray-600">{{ delivery.driverVehicle }}</p>
+              </div>
+            </div>
+            <a [href]="'tel:' + delivery.driverPhone"
+              class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all">
+              📞 Contacter le livreur
+            </a>
+          </div>
+
+          <!-- Delivery Address -->
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Adresse de livraison</h2>
+            <div class="flex items-start gap-3">
+              <span class="text-orange-500 text-xl mt-0.5">📍</span>
+              <p class="text-gray-700">{{ delivery.deliveryAddress }}</p>
+            </div>
+          </div>
+
+          <!-- Support -->
+          <div class="bg-orange-50 rounded-xl p-6 border border-orange-200">
+            <p class="font-semibold text-gray-900 mb-2">Besoin d'aide ?</p>
+            <p class="text-sm text-gray-600 mb-4">Notre équipe support est disponible 7j/7</p>
+            <button class="w-full bg-white text-orange-600 py-2 rounded-lg font-semibold hover:bg-gray-50 transition-colors border border-orange-300">
+              Contacter le support
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

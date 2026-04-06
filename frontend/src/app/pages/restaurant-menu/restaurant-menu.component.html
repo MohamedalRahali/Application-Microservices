@@ -1,0 +1,114 @@
+<div class="min-h-screen bg-gray-50 pb-32 md:pb-0">
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="flex items-center justify-center h-64">
+    <div class="animate-spin rounded-full h-12 w-12 border-4 border-orange-500 border-t-transparent"></div>
+  </div>
+
+  <ng-container *ngIf="!loading && restaurant">
+    <!-- Hero -->
+    <div class="relative h-56 md:h-72 overflow-hidden">
+      <img [src]="restaurant.image" [alt]="restaurant.name" class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+      <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+        <h1 class="text-3xl font-bold mb-1">{{ restaurant.name }}</h1>
+        <p class="text-white/80 mb-2">{{ restaurant.cuisine }} • {{ restaurant.description }}</p>
+        <div class="flex items-center gap-4 text-sm">
+          <span>⭐ {{ restaurant.rating }} ({{ restaurant.ratingCount }})</span>
+          <span>⏱ {{ restaurant.deliveryTime }} min</span>
+          <span>🚚 {{ restaurant.deliveryFee === 0 ? 'Gratuit' : restaurant.deliveryFee + '€' }}</span>
+          <span class="badge-service">🔌 Menu Service</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex flex-col lg:flex-row gap-8">
+
+        <!-- Menu -->
+        <div class="flex-1">
+          <!-- Category tabs -->
+          <div class="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide" *ngIf="menu">
+            <button *ngFor="let cat of menu.categories; let i = index"
+              (click)="activeCategory = i"
+              [class]="activeCategory === i
+                ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap'
+                : 'bg-white text-gray-600 px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap border border-gray-200 hover:border-orange-400'">
+              {{ cat.name }}
+            </button>
+          </div>
+
+          <!-- Items -->
+          <div *ngIf="menu && menu.categories[activeCategory]" class="space-y-4">
+            <h2 class="text-xl font-bold text-gray-900">{{ menu.categories[activeCategory].name }}</h2>
+            <div *ngFor="let item of menu.categories[activeCategory].items"
+              class="bg-white rounded-xl shadow-sm p-4 flex gap-4"
+              [class.opacity-50]="!item.available">
+              <div class="flex-1">
+                <div class="flex items-start gap-2 mb-1">
+                  <h4 class="font-semibold text-gray-900 flex-1">{{ item.name }}</h4>
+                  <span *ngIf="item.popular"
+                    class="bg-orange-100 text-orange-600 text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                    ⭐ Populaire
+                  </span>
+                  <span *ngIf="item.vegetarian" class="text-green-600 text-sm">🌿</span>
+                </div>
+                <p class="text-gray-500 text-sm mb-3 line-clamp-2">{{ item.description }}</p>
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-lg text-gray-900">{{ item.price.toFixed(2) }}€</span>
+                  <div *ngIf="item.available" class="flex items-center gap-2">
+                    <button *ngIf="getQty(item) > 0" (click)="removeFromCart(item)"
+                      class="w-8 h-8 rounded-full border-2 border-orange-500 text-orange-500 font-bold hover:bg-orange-50 transition-colors">
+                      −
+                    </button>
+                    <span *ngIf="getQty(item) > 0" class="font-bold text-gray-900 w-4 text-center">
+                      {{ getQty(item) }}
+                    </span>
+                    <button (click)="addToCart(item)"
+                      class="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold hover:from-orange-600 hover:to-red-600 transition-all shadow-md">
+                      +
+                    </button>
+                  </div>
+                  <span *ngIf="!item.available" class="text-xs text-gray-400">Indisponible</span>
+                </div>
+              </div>
+              <img *ngIf="item.image" [src]="item.image" [alt]="item.name"
+                class="w-24 h-24 rounded-lg object-cover flex-shrink-0" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Cart sidebar (desktop) -->
+        <div class="hidden lg:block w-80">
+          <div class="bg-white rounded-xl shadow-sm p-6 sticky top-20">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">🛒 Mon Panier</h2>
+            <div *ngIf="cart.length === 0" class="text-center py-8 text-gray-400">
+              <div class="text-4xl mb-2">🛒</div>
+              <p class="text-sm">Ajoutez des articles</p>
+            </div>
+            <div *ngIf="cart.length > 0" class="space-y-3">
+              <div *ngFor="let c of cart" class="flex items-center justify-between text-sm">
+                <span class="text-gray-700 flex-1">{{ c.item.name }}</span>
+                <span class="text-gray-500 mx-2">x{{ c.qty }}</span>
+                <span class="font-semibold text-gray-900">{{ (c.item.price * c.qty).toFixed(2) }}€</span>
+              </div>
+              <div class="border-t border-gray-100 pt-3 flex justify-between font-bold text-gray-900">
+                <span>Total</span>
+                <span>{{ total.toFixed(2) }}€</span>
+              </div>
+              <button class="w-full btn-primary mt-2">Commander</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Mobile cart bar -->
+  <div *ngIf="cart.length > 0"
+    class="lg:hidden fixed bottom-16 left-0 right-0 bg-gradient-to-r from-orange-500 to-red-500 text-white p-4 flex items-center justify-between shadow-lg">
+    <span class="font-semibold">{{ cartCount }} article(s)</span>
+    <span class="font-bold">{{ total.toFixed(2) }}€</span>
+    <button class="bg-white text-orange-600 px-4 py-2 rounded-lg font-bold text-sm">Commander</button>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Livreurs 👤</h1>
+      <p class="text-gray-500 text-sm mt-1">Gérer l'équipe de livraison</p>
+    </div>
+    <button (click)="openCreate()" class="btn-primary">+ Ajouter un livreur</button>
+  </div>
+
+  <!-- Form Modal -->
+  <div *ngIf="showForm" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">
+        {{ isEditing ? 'Modifier le livreur' : 'Nouveau livreur' }}
+      </h2>
+      <div class="space-y-3">
+        <input type="text" [(ngModel)]="editingDriver.name" placeholder="Nom complet"
+          class="w-full border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+        <input type="text" [(ngModel)]="editingDriver.phone" placeholder="Téléphone"
+          class="w-full border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+        <input type="text" [(ngModel)]="editingDriver.vehicle" placeholder="Véhicule (ex: Moto Yamaha)"
+          class="w-full border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+        <div>
+          <label class="block text-xs text-gray-500 mb-1">Note / évaluation (0–5)</label>
+          <input type="number" min="0" max="5" step="0.1" [(ngModel)]="editingDriver.rating"
+            class="w-full border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+        </div>
+        <input type="text" [(ngModel)]="editingDriver.avatar" placeholder="URL photo (optionnel)"
+          class="w-full border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+        <div class="flex items-center gap-2">
+          <input type="checkbox" [(ngModel)]="editingDriver.available" id="available" class="w-4 h-4 accent-orange-500" />
+          <label for="available" class="text-sm text-gray-700">Disponible</label>
+        </div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button (click)="save()" class="flex-1 btn-primary">Enregistrer</button>
+        <button (click)="showForm = false" class="flex-1 btn-outline">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="flex items-center justify-center h-32">
+    <div class="animate-spin rounded-full h-10 w-10 border-4 border-orange-500 border-t-transparent"></div>
+  </div>
+
+  <!-- Grid -->
+  <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div *ngFor="let driver of drivers" class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center gap-4 mb-4">
+        <img [src]="driver.avatar || 'https://placehold.co/48x48'" [alt]="driver.name"
+          class="w-12 h-12 rounded-full object-cover" />
+        <div class="flex-1">
+          <p class="font-bold text-gray-900">{{ driver.name }}</p>
+          <p class="text-sm text-gray-500">{{ driver.phone }}</p>
+        </div>
+        <span [class]="driver.available ? 'badge-green' : 'badge-red'">
+          {{ driver.available ? 'Dispo' : 'Occupé' }}
+        </span>
+      </div>
+      <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+        <span>🚗 {{ driver.vehicle ?? '—' }}</span>
+        <span>⭐ {{ driver.rating }}</span>
+      </div>
+      <div class="flex gap-2">
+        <button (click)="openEdit(driver)" class="flex-1 btn-outline text-sm py-1.5">Modifier</button>
+        <button (click)="delete(driver.id)" class="flex-1 btn-danger text-sm py-1.5">Supprimer</button>
+      </div>
+    </div>
+    <div *ngIf="drivers.length === 0" class="col-span-3 text-center py-8 text-gray-400">
+      Aucun livreur enregistré
+    </div>
+  </div>
+</div>

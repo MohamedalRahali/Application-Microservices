@@ -1,0 +1,143 @@
+<div class="space-y-6">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+    <p class="text-gray-500 text-sm mt-1">Vue d'ensemble des services</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="flex items-center justify-center h-32">
+    <div class="animate-spin rounded-full h-10 w-10 border-4 border-orange-500 border-t-transparent"></div>
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <!-- Restaurant Stats -->
+    <div>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+          🍴 Restaurants
+        </h2>
+        <a routerLink="/restaurants" class="text-sm text-orange-600 hover:underline">Voir tout →</a>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" *ngIf="restaurantStats">
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">Total restaurants</p>
+          <p class="text-3xl font-bold text-gray-900">{{ restaurantStats.totalRestaurants }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">Actifs</p>
+          <p class="text-3xl font-bold text-green-600">{{ restaurantStats.activeRestaurants }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">Promus</p>
+          <p class="text-3xl font-bold text-orange-600">{{ restaurantStats.promotedRestaurants }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">Catégories</p>
+          <p class="text-3xl font-bold text-purple-600">{{ restaurantStats.totalCategories }}</p>
+        </div>
+      </div>
+      <div *ngIf="!restaurantStats" class="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm">
+        ⚠️ Restaurant Service indisponible — démarrez le service sur le port 8083
+      </div>
+    </div>
+
+    <!-- Delivery Stats -->
+    <div>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+          🛵 Livraisons
+        </h2>
+        <a routerLink="/deliveries" class="text-sm text-orange-600 hover:underline">Voir tout →</a>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" *ngIf="deliveryStats">
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">Total livraisons</p>
+          <p class="text-3xl font-bold text-gray-900">{{ deliveryStats.totalDeliveries }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">En cours</p>
+          <p class="text-3xl font-bold text-orange-600">{{ deliveryStats.activeDeliveries }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">Livrées</p>
+          <p class="text-3xl font-bold text-green-600">{{ deliveryStats.completedDeliveries }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">Livreurs dispo</p>
+          <p class="text-3xl font-bold text-blue-600">{{ deliveryStats.availableDrivers }}/{{ deliveryStats.totalDrivers }}</p>
+        </div>
+      </div>
+      <div *ngIf="!deliveryStats" class="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm">
+        ⚠️ Delivery Service indisponible — démarrez le service sur le port 8081
+      </div>
+    </div>
+
+    <!-- Promotion Stats -->
+    <div>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+          🎁 Promotions
+        </h2>
+        <a routerLink="/promotions" class="text-sm text-orange-600 hover:underline">Voir tout →</a>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" *ngIf="promotionStats">
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">Total promos</p>
+          <p class="text-3xl font-bold text-gray-900">{{ promotionStats.totalPromotions }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">Actives</p>
+          <p class="text-3xl font-bold text-green-600">{{ promotionStats.activePromotions }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">Expirées</p>
+          <p class="text-3xl font-bold text-gray-400">{{ promotionStats.expiredPromotions }}</p>
+        </div>
+        <div class="stat-card">
+          <p class="text-sm text-gray-500 mb-1">Utilisations</p>
+          <p class="text-3xl font-bold text-purple-600">{{ promotionStats.totalUsages }}</p>
+        </div>
+      </div>
+      <div *ngIf="!promotionStats" class="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm">
+        ⚠️ Promotion Service indisponible — démarrez le service sur le port 8082
+      </div>
+    </div>
+
+    <!-- Accès rapides (même logique API partout : anti-cache + données réelles) -->
+    <div>
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Accès rapide</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <a routerLink="/deliveries"
+          class="bg-gradient-to-r from-sky-500 to-blue-600 text-white rounded-xl p-5 hover:from-sky-600 hover:to-blue-700 transition-all shadow-sm">
+          <div class="text-3xl mb-2">🛵</div>
+          <h3 class="font-bold">Livraisons</h3>
+          <p class="text-white/85 text-sm mt-1">Commandes et statuts</p>
+        </a>
+        <a routerLink="/drivers"
+          class="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl p-5 hover:from-orange-600 hover:to-red-600 transition-all shadow-sm">
+          <div class="text-3xl mb-2">👤</div>
+          <h3 class="font-bold">Livreurs</h3>
+          <p class="text-white/85 text-sm mt-1">Équipe de livraison</p>
+        </a>
+        <a routerLink="/restaurants"
+          class="bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl p-5 hover:from-green-600 hover:to-teal-600 transition-all shadow-sm">
+          <div class="text-3xl mb-2">🍴</div>
+          <h3 class="font-bold">Restaurants</h3>
+          <p class="text-white/85 text-sm mt-1">Établissements</p>
+        </a>
+        <a routerLink="/menu"
+          class="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl p-5 hover:from-amber-600 hover:to-orange-600 transition-all shadow-sm">
+          <div class="text-3xl mb-2">📋</div>
+          <h3 class="font-bold">Menu</h3>
+          <p class="text-white/85 text-sm mt-1">Plats et catégories</p>
+        </a>
+        <a routerLink="/promotions"
+          class="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl p-5 hover:from-purple-600 hover:to-pink-600 transition-all shadow-sm">
+          <div class="text-3xl mb-2">🎁</div>
+          <h3 class="font-bold">Promotions</h3>
+          <p class="text-white/85 text-sm mt-1">Codes promo</p>
+        </a>
+      </div>
+    </div>
+  </ng-container>
+</div>

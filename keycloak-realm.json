@@ -1,0 +1,175 @@
+{
+  "realm": "foodexpress",
+  "enabled": true,
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
+  "accessTokenLifespan": 3600,
+  "refreshTokenLifespan": 86400,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": true,
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "maxFailureWaitSeconds": 900,
+  "minimumQuickLoginWaitSeconds": 60,
+  "waitIncrementSeconds": 60,
+  "quickLoginCheckMilliSeconds": 1000,
+  "maxDeltaTimeSeconds": 43200,
+  "failureFactor": 30,
+  "displayName": "FoodExpress",
+  "displayNameHtml": "<div class=\"kc-logo-text\"><span>FoodExpress</span></div>",
+  "defaultRoles": ["customer"],
+  "roles": {
+    "realm": [
+      {
+        "name": "admin",
+        "description": "Administrator access to all features"
+      },
+      {
+        "name": "restaurant_owner",
+        "description": "Restaurant owner role"
+      },
+      {
+        "name": "delivery_person",
+        "description": "Delivery personnel role"
+      },
+      {
+        "name": "customer",
+        "description": "Regular customer role"
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "admin",
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@foodexpress.com",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Admin@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["admin", "customer"],
+      "clientRoles": {
+        "account": ["manage-account"]
+      }
+    },
+    {
+      "username": "restaurant_owner",
+      "firstName": "Restaurant",
+      "lastName": "Owner",
+      "email": "owner@foodexpress.com",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Owner@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["restaurant_owner", "customer"],
+      "clientRoles": {
+        "account": ["manage-account"]
+      }
+    },
+    {
+      "username": "delivery_person",
+      "firstName": "Delivery",
+      "lastName": "Person",
+      "email": "delivery@foodexpress.com",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Delivery@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["delivery_person", "customer"],
+      "clientRoles": {
+        "account": ["manage-account"]
+      }
+    },
+    {
+      "username": "customer",
+      "firstName": "Test",
+      "lastName": "Customer",
+      "email": "customer@foodexpress.com",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Customer@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["customer"],
+      "clientRoles": {
+        "account": ["manage-account"]
+      }
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "foodexpress-client",
+      "name": "FoodExpress Client",
+      "description": "Main FoodExpress Application Client",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "Pbguru5emiheaZQuIsPVrBdacpiLkfqW",
+      "redirectUris": [
+        "http://localhost:4200/*",
+        "http://localhost:4201/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4200",
+        "http://localhost:4201"
+      ],
+      "publicClient": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "oauth2DeviceAuthorizationGrantEnabled": false,
+      "authorizationServicesEnabled": false,
+      "bearerOnlyClient": false,
+      "consentRequired": false,
+      "defaultClientScopes": [
+        "web-origins",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access"
+      ]
+    },
+    {
+      "clientId": "foodexpress-server",
+      "name": "FoodExpress Server",
+      "description": "FoodExpress Backend Services",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "your-server-secret",
+      "publicClient": false,
+      "bearerOnlyClient": true,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false
+    }
+  ]
+}

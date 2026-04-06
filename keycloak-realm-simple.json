@@ -1,0 +1,115 @@
+{
+  "realm": "foodexpress",
+  "enabled": true,
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
+  "resetPasswordAllowed": true,
+  "users": [
+    {
+      "username": "admin",
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@foodexpress.com",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Admin@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["admin"]
+    },
+    {
+      "username": "customer",
+      "firstName": "Test",
+      "lastName": "Customer",
+      "email": "customer@foodexpress.com",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Customer@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["customer"]
+    },
+    {
+      "username": "restaurant_owner",
+      "firstName": "Restaurant",
+      "lastName": "Owner",
+      "email": "owner@foodexpress.com",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Owner@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["restaurant_owner"]
+    },
+    {
+      "username": "delivery_person",
+      "firstName": "Delivery",
+      "lastName": "Person",
+      "email": "delivery@foodexpress.com",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Delivery@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["delivery_person"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "admin"
+      },
+      {
+        "name": "restaurant_owner"
+      },
+      {
+        "name": "delivery_person"
+      },
+      {
+        "name": "customer"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "foodexpress-client",
+      "name": "FoodExpress Client",
+      "enabled": true,
+      "public": true,
+      "redirectUris": [
+        "http://localhost:4200/*",
+        "http://localhost:4201/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4200",
+        "http://localhost:4201",
+        "+"
+      ],
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": true,
+      "defaultClientScopes": [
+        "web-origins",
+        "profile",
+        "roles",
+        "email"
+      ]
+    }
+  ]
+}

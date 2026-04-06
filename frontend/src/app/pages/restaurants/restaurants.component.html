@@ -1,0 +1,60 @@
+<div class="min-h-screen bg-gray-50 pb-16 md:pb-0">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Restaurants 🍴</h1>
+      <span class="badge-service">🔌 API: Restaurant Service</span>
+    </div>
+
+    <!-- Search -->
+    <div class="bg-white rounded-xl shadow-sm p-4 mb-6 flex gap-3">
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Rechercher un restaurant ou cuisine..."
+        class="flex-1 border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+      <button (click)="search()" class="btn-primary">Rechercher</button>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="flex items-center justify-center h-48">
+      <div class="animate-spin rounded-full h-12 w-12 border-4 border-orange-500 border-t-transparent"></div>
+    </div>
+
+    <!-- Grid -->
+    <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <a *ngFor="let r of restaurants" [routerLink]="['/restaurant', r.id]"
+        class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow hover:-translate-y-1 transform duration-200 cursor-pointer">
+        <div class="relative h-48 overflow-hidden">
+          <img [src]="r.image" [alt]="r.name" class="w-full h-full object-cover" />
+          <div *ngIf="r.promoted && r.discount"
+            class="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+            🏷️ -{{ r.discount }}%
+          </div>
+          <div *ngIf="r.promoted && !r.discount"
+            class="absolute top-3 left-3 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+            ⚡ Promu
+          </div>
+        </div>
+        <div class="p-4">
+          <h3 class="font-bold text-lg mb-1 text-gray-900">{{ r.name }}</h3>
+          <p class="text-gray-500 text-sm mb-3">{{ r.cuisine }}</p>
+          <div class="flex items-center justify-between text-sm">
+            <div class="flex items-center gap-1 text-yellow-500">
+              <span>★</span>
+              <span class="font-semibold text-gray-900">{{ r.rating }}</span>
+              <span class="text-gray-400">({{ r.ratingCount }})</span>
+            </div>
+            <span class="text-gray-500">⏱ {{ r.deliveryTime }} min</span>
+            <span class="text-gray-500">{{ r.deliveryFee === 0 ? 'Gratuit' : r.deliveryFee + '€' }}</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Empty -->
+    <div *ngIf="!loading && restaurants.length === 0" class="text-center py-16">
+      <div class="text-6xl mb-4">🍴</div>
+      <h3 class="text-xl font-bold text-gray-900 mb-2">Aucun restaurant trouvé</h3>
+      <p class="text-gray-500">Essayez une autre recherche</p>
+    </div>
+  </div>
+</div>

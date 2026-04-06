@@ -1,0 +1,119 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Promotions 🎁</h1>
+      <p class="text-gray-500 text-sm mt-1">Gérer les codes promo et offres</p>
+    </div>
+    <button (click)="openCreate()" class="btn-primary">+ Nouvelle promotion</button>
+  </div>
+
+  <!-- Form Modal -->
+  <div *ngIf="showForm" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg my-4">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">
+        {{ isEditing ? 'Modifier la promotion' : 'Nouvelle promotion' }}
+      </h2>
+      <div class="space-y-3">
+        <input type="text" [(ngModel)]="editingPromo.title" placeholder="Titre *"
+          class="w-full border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+        <textarea [(ngModel)]="editingPromo.description" placeholder="Description"
+          class="w-full border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400 h-20 resize-none"></textarea>
+        <input type="text" [(ngModel)]="editingPromo.code" placeholder="Code promo (ex: WELCOME20)"
+          class="w-full border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400 uppercase" />
+        <select [(ngModel)]="editingPromo.type"
+          class="w-full border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400">
+          <option *ngFor="let t of types" [value]="t">{{ typeLabel(t) }}</option>
+        </select>
+        <div class="grid grid-cols-2 gap-3">
+          <input type="number" [(ngModel)]="editingPromo.discountPercent" placeholder="Réduction %"
+            class="border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+          <input type="number" [(ngModel)]="editingPromo.discountAmount" placeholder="Montant fixe (€)"
+            class="border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs text-gray-500 mb-1 block">Valide du</label>
+            <input type="datetime-local" [(ngModel)]="editingPromo.validFrom"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-orange-400 text-sm" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-500 mb-1 block">Valide jusqu'au</label>
+            <input type="datetime-local" [(ngModel)]="editingPromo.validUntil"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-orange-400 text-sm" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <input type="number" [(ngModel)]="editingPromo.usageLimit" placeholder="Limite d'utilisation"
+            class="border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+          <input type="number" [(ngModel)]="editingPromo.minOrderAmount" placeholder="Commande min (€)"
+            class="border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+        </div>
+        <input type="text" [(ngModel)]="editingPromo.image" placeholder="URL image (optionnel)"
+          class="w-full border border-gray-200 rounded-lg px-4 py-2 outline-none focus:border-orange-400" />
+        <div class="flex items-center gap-2">
+          <input type="checkbox" [(ngModel)]="editingPromo.active" id="active" class="w-4 h-4 accent-orange-500" />
+          <label for="active" class="text-sm text-gray-700">Promotion active</label>
+        </div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button (click)="save()" class="flex-1 btn-primary">Enregistrer</button>
+        <button (click)="showForm = false" class="flex-1 btn-outline">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="flex items-center justify-center h-32">
+    <div class="animate-spin rounded-full h-10 w-10 border-4 border-orange-500 border-t-transparent"></div>
+  </div>
+
+  <!-- Table -->
+  <div *ngIf="!loading" class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 border-b border-gray-100">
+        <tr>
+          <th class="text-left px-4 py-3 font-semibold text-gray-600">Titre</th>
+          <th class="text-left px-4 py-3 font-semibold text-gray-600">Code</th>
+          <th class="text-left px-4 py-3 font-semibold text-gray-600">Type</th>
+          <th class="text-left px-4 py-3 font-semibold text-gray-600">Réduction</th>
+          <th class="text-left px-4 py-3 font-semibold text-gray-600">Utilisations</th>
+          <th class="text-left px-4 py-3 font-semibold text-gray-600">Statut</th>
+          <th class="text-left px-4 py-3 font-semibold text-gray-600">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of promotions" class="table-row">
+          <td class="px-4 py-3 font-semibold text-gray-900">{{ p.title }}</td>
+          <td class="px-4 py-3 font-mono text-orange-600">{{ p.code ?? '—' }}</td>
+          <td class="px-4 py-3 text-gray-600">{{ typeLabel(p.type) }}</td>
+          <td class="px-4 py-3 font-semibold text-gray-900">
+            <span *ngIf="p.discountPercent">-{{ p.discountPercent }}%</span>
+            <span *ngIf="p.discountAmount">-{{ p.discountAmount }}€</span>
+            <span *ngIf="p.type === 'FREE_DELIVERY'">🚚 Gratuit</span>
+          </td>
+          <td class="px-4 py-3 text-gray-600">
+            {{ p.usageCount ?? 0 }}<span *ngIf="p.usageLimit"> / {{ p.usageLimit }}</span>
+          </td>
+          <td class="px-4 py-3">
+            <span *ngIf="p.active && !isExpired(p.validUntil)" class="badge-green">Active</span>
+            <span *ngIf="isExpired(p.validUntil)" class="badge-gray">Expirée</span>
+            <span *ngIf="!p.active && !isExpired(p.validUntil)" class="badge-red">Inactive</span>
+          </td>
+          <td class="px-4 py-3">
+            <div class="flex items-center gap-2">
+              <button (click)="openEdit(p)" class="text-orange-600 hover:text-orange-700 font-semibold text-xs">
+                Modifier
+              </button>
+              <button (click)="delete(p.id!)" class="text-red-500 hover:text-red-700 font-semibold text-xs">
+                Suppr.
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="promotions.length === 0">
+          <td colspan="7" class="px-4 py-8 text-center text-gray-400">Aucune promotion</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
